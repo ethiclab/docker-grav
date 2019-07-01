@@ -1,5 +1,4 @@
 FROM php:7.2-apache
-LABEL maintainer="Andy Miller <rhuk@getgrav.org> (@rhukster)"
 
 # Enable Apache Rewrite + Expires Module
 RUN a2enmod rewrite expires
@@ -41,12 +40,14 @@ RUN chown www-data:www-data /var/www
 USER www-data
 
 # Define Grav version and expected SHA1 signature
-ENV GRAV_VERSION 1.5.5
-ENV GRAV_SHA1 af0433facdae1afeb1d973a66db2315c5022b10d
+ENV GRAV_VERSION 1.7.0-beta3
+ENV GRAV_SHA1 f87f35183071589ec2981c4f2f42722192ae6208
+
+ADD grav-admin.zip /var/www/grav-admin.zip
 
 # Install grav
 WORKDIR /var/www
-RUN curl -o grav-admin.zip -SL https://getgrav.org/download/core/grav-admin/${GRAV_VERSION} && \
+RUN sha1sum grav-admin.zip && \
     echo "$GRAV_SHA1 grav-admin.zip" | sha1sum -c - && \
     unzip grav-admin.zip && \
     mv -T /var/www/grav-admin /var/www/html && \
